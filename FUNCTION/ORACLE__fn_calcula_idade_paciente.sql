@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION OWNER_ODONTO.FN_CALCULA_IDADE_PACIENTE (p_data_nascimento IN DATE) RETURN NUMBER IS
+    v_idade NUMBER;
+BEGIN
+    IF p_data_nascimento IS NULL THEN
+        RETURN NULL;
+    END IF;
+    
+    v_idade := TRUNC(MONTHS_BETWEEN(SYSDATE, p_data_nascimento) / 12);
+    RETURN v_idade;
+END FN_CALCULA_IDADE_PACIENTE;
+/
