@@ -149,11 +149,17 @@ A bancada clínica implementa o odontograma conforme a norma da **FDI (Fédérat
 
 ---
 
-## 📋 6. Governança e Regras do Repositório
+## 📋 6. Governança, Ambientes e Testes
 
 * **Sem Commits Automáticos:** O agente automatizado nunca executa `git commit` ou `git push` sem aprovação direta do usuário no chat (conforme [`GEMINI.md`](./GEMINI.md)).
 * **Strict Typing:** TypeScript configurado com `strict: true` (proibição de `any`) e Python 100% tipado com Pydantic V2.
-* **Segredos:** Credenciais e chaves JWT residem exclusivamente em `.env` (ignorado pelo `.gitignore`), sendo disponibilizado apenas o [.env.example](./.env.example) versionado.
+* **Segredos & Arquivos `.env`:** Credenciais e chaves JWT residem exclusivamente em arquivos `.env` locais (estritamente ignorados pelo `.gitignore`), sendo disponibilizados os modelos seguros [.env.example](./.env.example) e [backend/.env.example](./backend/.env.example).
+* **Bateria de Testes Automatizados de AppSec:**
+  ```powershell
+  # Executa a suíte de segurança completa (Oracle + FastAPI + RBAC)
+  cd backend
+  .\.venv\Scripts\pytest.exe tests/test_security_suite.py -v
+  ```
 
 ---
 

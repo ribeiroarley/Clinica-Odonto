@@ -29,8 +29,8 @@ dentist_write_guard = RoleChecker(allowed_roles=["DENTISTA"])
 )
 def get_patient_odontogram(
     patient_id: int,
-    conn: oracledb.Connection = Depends(get_db_connection),
     _: TokenPayload = Depends(clinical_read_guard),
+    conn: oracledb.Connection = Depends(get_db_connection),
 ) -> PatientOdontogramResponse:
     """
     Retorna todos os dentes mapeados do paciente com suas respectivas faces e procedimentos realizados.
@@ -117,8 +117,8 @@ def get_patient_odontogram(
 )
 def add_odontogram_procedure(
     proc_in: OdontogramProcedureCreate,
-    conn: oracledb.Connection = Depends(get_db_connection),
     _: TokenPayload = Depends(dentist_write_guard),
+    conn: oracledb.Connection = Depends(get_db_connection),
 ) -> OdontogramProcedureResponse:
     """
     Adiciona uma patologia ou procedimento restaurador em uma face ou dente,
