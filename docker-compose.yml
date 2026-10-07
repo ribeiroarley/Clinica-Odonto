@@ -1,0 +1,29 @@
+services:
+  database:
+    container_name: clinica-odonto-db
+    image: container-registry.oracle.com/database/free:latest
+    restart: unless-stopped
+    ports:
+      - "${ORACLE_PORT:-1521}:1521"
+      - "${ORACLE_OEM_PORT:-5500}:5500"
+    environment:
+      ORACLE_PWD: ${ORACLE_PWD}
+      ORACLE_CHARACTERSET: ${ORACLE_CHARACTERSET:-AL32UTF8}
+      APP_DB_USER: ${APP_DB_USER:-OWNER_ODONTO}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:-OdontoApp#2026}
+      APP_DB_SERVICE: ${APP_DB_SERVICE:-FREEPDB1}
+    volumes:
+      - clinica_odonto_oradata:/opt/oracle/oradata
+      - ./database/init-scripts:/container-entrypoint-initdb.d:ro
+      - ./database/oracle:/opt/oracle/app-database/oracle:ro
+    networks:
+      - clinica-odonto-net
+
+volumes:
+  clinica_odonto_oradata:
+    name: clinica_odonto_oradata
+
+networks:
+  clinica-odonto-net:
+    name: clinica-odonto-net
+    driver: bridge
