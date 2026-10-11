@@ -6,6 +6,10 @@ import {
   LoginPayload,
   LoginResponse,
   UserSession,
+  AICopilotRequest,
+  AICopilotResponse,
+  AuditDecisionPayload,
+  AuditDecisionResponse,
 } from "./types";
 
 const API_BASE_URL =
@@ -104,6 +108,29 @@ export const apiClient = {
     payload: OdontogramProcedureCreatePayload
   ): Promise<OdontogramProcedureResponse> {
     return request<OdontogramProcedureResponse>("/odontogram/procedure", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Dispara o Copiloto Clinico de IA para inferir dentes e procedimentos
+   * a partir do relato clinico anonimizado do dentista (High-Risk EU AI Act)
+   */
+  async requestAICopilot(payload: AICopilotRequest): Promise<AICopilotResponse> {
+    return request<AICopilotResponse>("/ai/copilot/odontogram", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Registra a deliberacao humana soberana (HITL) na trilha imutavel de auditoria (LGPD Art. 20)
+   */
+  async auditAICopilotDecision(
+    payload: AuditDecisionPayload
+  ): Promise<AuditDecisionResponse> {
+    return request<AuditDecisionResponse>("/ai/copilot/audit", {
       method: "POST",
       body: JSON.stringify(payload),
     });

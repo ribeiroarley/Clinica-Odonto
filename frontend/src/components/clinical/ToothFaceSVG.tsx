@@ -11,6 +11,8 @@ interface ToothFaceSVGProps {
   selectedFace?: ToothFace;
   onFaceClick?: (toothNumber: number, face: ToothFace) => void;
   onToothClick?: (toothNumber: number) => void;
+  isAiSuggested?: boolean;
+  aiSuggestionLabel?: string;
 }
 
 export const ToothFaceSVG: React.FC<ToothFaceSVGProps> = ({
@@ -21,6 +23,8 @@ export const ToothFaceSVG: React.FC<ToothFaceSVGProps> = ({
   selectedFace,
   onFaceClick,
   onToothClick,
+  isAiSuggested = false,
+  aiSuggestionLabel,
 }) => {
   // Mapeamento anatomico das faces superior vs inferior
   // Na arcada superior (Maxila): topo e Vestibular (V), base e Palatina/Lingual (L/P)
@@ -90,7 +94,23 @@ export const ToothFaceSVG: React.FC<ToothFaceSVGProps> = ({
       </span>
 
       {/* Container SVG do Dente */}
-      <div className="relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center">
+      <div
+        className={`relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-xl transition-all ${
+          isAiSuggested
+            ? "ring-2 ring-amber-500 ring-dashed bg-amber-50/70 shadow-sm animate-pulse"
+            : ""
+        }`}
+        title={
+          isAiSuggested
+            ? `Sugestão de IA: ${aiSuggestionLabel || "Procedimento recomendado"}`
+            : `Dente ${toothNumber} - Status: ${generalStatus}`
+        }
+      >
+        {isAiSuggested && (
+          <span className="absolute -top-1.5 -right-1.5 z-10 px-1 py-0.2 rounded-full bg-amber-500 text-white text-[8px] font-extrabold shadow-xs tracking-tighter">
+            IA
+          </span>
+        )}
         <svg
           viewBox="0 0 100 100"
           className="w-full h-full drop-shadow-sm transition-transform group-hover:scale-105"

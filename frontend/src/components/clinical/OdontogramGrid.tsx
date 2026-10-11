@@ -7,6 +7,7 @@ import {
   ToothGeneralStatus,
   ToothState,
   PatientOdontogram,
+  ToothProcedureSuggestion,
 } from "@/lib/types";
 import { ToothFaceSVG } from "./ToothFaceSVG";
 import {
@@ -21,6 +22,7 @@ import {
 
 interface OdontogramGridProps {
   odontogram: PatientOdontogram;
+  aiSuggestions?: ToothProcedureSuggestion[];
   onSaveProcedure: (payload: {
     numero_dente: number;
     face_dente: ToothFace;
@@ -42,6 +44,7 @@ type ActiveTool = FaceState | "AUSENTE" | "IMPLANTE" | "HIGIDO";
 
 export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
   odontogram,
+  aiSuggestions = [],
   onSaveProcedure,
 }) => {
   const [activeTool, setActiveTool] = useState<ActiveTool>("CARIE");
@@ -228,6 +231,7 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
             <div className="flex justify-end gap-1 sm:gap-2">
               {QUADRANT_1.map((num) => {
                 const tooth = getToothData(num);
+                const aiSug = aiSuggestions.find((s) => s.numero_dente === num);
                 return (
                   <ToothFaceSVG
                     key={num}
@@ -237,6 +241,12 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
                     isUpperArch={true}
                     onFaceClick={handleFaceClick}
                     onToothClick={(n) => setSelectedTooth(n)}
+                    isAiSuggested={!!aiSug}
+                    aiSuggestionLabel={
+                      aiSug
+                        ? `${aiSug.nome_procedimento} (${aiSug.face_dente}) - ${aiSug.evidencia_texto}`
+                        : undefined
+                    }
                   />
                 );
               })}
@@ -247,6 +257,7 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
             <div className="flex justify-start gap-1 sm:gap-2 border-l-2 border-dashed border-teal-300 pl-4 md:pl-8">
               {QUADRANT_2.map((num) => {
                 const tooth = getToothData(num);
+                const aiSug = aiSuggestions.find((s) => s.numero_dente === num);
                 return (
                   <ToothFaceSVG
                     key={num}
@@ -256,6 +267,12 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
                     isUpperArch={true}
                     onFaceClick={handleFaceClick}
                     onToothClick={(n) => setSelectedTooth(n)}
+                    isAiSuggested={!!aiSug}
+                    aiSuggestionLabel={
+                      aiSug
+                        ? `${aiSug.nome_procedimento} (${aiSug.face_dente}) - ${aiSug.evidencia_texto}`
+                        : undefined
+                    }
                   />
                 );
               })}
@@ -279,6 +296,7 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
             <div className="flex justify-end gap-1 sm:gap-2">
               {QUADRANT_4.map((num) => {
                 const tooth = getToothData(num);
+                const aiSug = aiSuggestions.find((s) => s.numero_dente === num);
                 return (
                   <ToothFaceSVG
                     key={num}
@@ -288,6 +306,12 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
                     isUpperArch={false}
                     onFaceClick={handleFaceClick}
                     onToothClick={(n) => setSelectedTooth(n)}
+                    isAiSuggested={!!aiSug}
+                    aiSuggestionLabel={
+                      aiSug
+                        ? `${aiSug.nome_procedimento} (${aiSug.face_dente}) - ${aiSug.evidencia_texto}`
+                        : undefined
+                    }
                   />
                 );
               })}
@@ -298,6 +322,7 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
             <div className="flex justify-start gap-1 sm:gap-2 border-l-2 border-dashed border-teal-300 pl-4 md:pl-8">
               {QUADRANT_3.map((num) => {
                 const tooth = getToothData(num);
+                const aiSug = aiSuggestions.find((s) => s.numero_dente === num);
                 return (
                   <ToothFaceSVG
                     key={num}
@@ -307,6 +332,12 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
                     isUpperArch={false}
                     onFaceClick={handleFaceClick}
                     onToothClick={(n) => setSelectedTooth(n)}
+                    isAiSuggested={!!aiSug}
+                    aiSuggestionLabel={
+                      aiSug
+                        ? `${aiSug.nome_procedimento} (${aiSug.face_dente}) - ${aiSug.evidencia_texto}`
+                        : undefined
+                    }
                   />
                 );
               })}
@@ -339,6 +370,10 @@ export const OdontogramGrid: React.FC<OdontogramGridProps> = ({
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-sm bg-emerald-500" />
             <span>Implante</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3.5 h-3.5 rounded-sm bg-amber-100 border-2 border-dashed border-amber-500" />
+            <span className="font-semibold text-amber-700">Sugestão IA (Transitória)</span>
           </div>
         </div>
       </div>

@@ -105,3 +105,45 @@ export interface OdontogramProcedureResponse {
   data_registro: string;
   mensagem: string;
 }
+
+export interface ToothProcedureSuggestion {
+  numero_dente: number;
+  face_dente: ToothFace;
+  estado_face: FaceState;
+  id_procedimento: number;
+  nome_procedimento: string;
+  evidencia_texto: string;
+  valor_estimado?: number;
+}
+
+export interface AICopilotRequest {
+  id_paciente: number;
+  relato_clinico: string;
+  historico_anamnese?: string;
+}
+
+export interface AICopilotResponse {
+  id_auditoria_ia: number;
+  sugestoes: ToothProcedureSuggestion[];
+  alertas_anamnese: string[];
+  confianca_geral: number;
+  nome_modelo: string;
+  versao_modelo: string;
+  disclaimer: string;
+}
+
+export interface AuditDecisionPayload {
+  id_auditoria_ia: number;
+  id_paciente: number;
+  status_decisao_humana: "ACEITO" | "MODIFICADO" | "REJEITADO";
+  justificativa_rejeicao?: string;
+  procedimentos_confirmados?: ToothProcedureSuggestion[];
+}
+
+export interface AuditDecisionResponse {
+  sucesso: boolean;
+  mensagem: string;
+  id_auditoria_ia: number;
+  status_registrado: string;
+}
+

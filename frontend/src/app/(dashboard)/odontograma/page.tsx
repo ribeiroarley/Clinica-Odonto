@@ -2,8 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { apiClient } from "@/lib/api-client";
-import { PatientOdontogram, ToothFace, FaceState, ToothGeneralStatus } from "@/lib/types";
+import {
+  PatientOdontogram,
+  ToothFace,
+  FaceState,
+  ToothGeneralStatus,
+  ToothProcedureSuggestion,
+} from "@/lib/types";
 import { OdontogramGrid } from "@/components/clinical/OdontogramGrid";
+import { AICopilotPanel } from "@/components/clinical/AICopilotPanel";
 import { useAuth } from "@/lib/auth-context";
 import {
   Activity,
@@ -22,6 +29,7 @@ export default function OdontogramPage() {
   const { user } = useAuth();
   const [patientId] = useState<number>(1);
   const [odontogram, setOdontogram] = useState<PatientOdontogram | null>(null);
+  const [aiSuggestions, setAiSuggestions] = useState<ToothProcedureSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -160,6 +168,21 @@ export default function OdontogramPage() {
     }
   };
 
+  const handleApplyAiSuggestions = async (suggestions: ToothProcedureSuggestion[]) => {
+    for (const sug of suggestions) {
+      await handleSaveProcedure({
+        numero_dente: sug.numero_dente,
+        face_dente: sug.face_dente,
+        estado_face: sug.estado_face,
+        id_procedimento: sug.id_procedimento,
+        valor_aplicado: sug.valor_estimado,
+        status_geral_novo: sug.estado_face === "CANAL" ? "ENDODONTIA" : "EM_TRATAMENTO",
+        observacoes: `[IA Homologada] ${sug.evidencia_texto}`,
+      });
+    }
+    setAiSuggestions([]);
+  };
+
   // Contadores estatísticos
   const totalCaries =
     odontogram?.dentes.reduce(
@@ -257,6 +280,17 @@ export default function OdontogramPage() {
         </div>
       </section>
 
+      {/* Copiloto Clínico de IA com Human-in-the-Loop */}
+      <AICopilotPanel
+        patientId={patientId}
+        patientName={odontogram?.nome_paciente || "João Mendes"}
+        userRole={user?.role}
+        userCro={user?.cro}
+        onApplySuggestions={handleApplyAiSuggestions}
+        onClearSuggestions={() => setAiSuggestions([])}
+        onSuggestionsLoaded={(suggestions) => setAiSuggestions(suggestions)}
+      />
+
       {/* Grid Interativo do Odontograma */}
       <section className="bg-white rounded-2xl shadow-xs border border-slate-200 p-6">
         <div className="mb-4 flex items-center justify-between">
@@ -280,6 +314,7 @@ export default function OdontogramPage() {
               dentes: [],
             }
           }
+          aiSuggestions={aiSuggestions}
           onSaveProcedure={handleSaveProcedure}
         />
       </section>

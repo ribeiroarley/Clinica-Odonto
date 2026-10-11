@@ -23,6 +23,7 @@
 @@tables/ORACLE__tb_odontograma.sql
 @@tables/ORACLE__tb_odontograma_procedimentos.sql
 @@tables/ORACLE__tb_usuarios.sql
+@@tables/ORACLE__tb_auditoria_ia.sql
 
 -- 3. Indexes
 @@indexes/ORACLE__idx_pacientes_cpf.sql

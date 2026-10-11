@@ -18,6 +18,7 @@ from src.core.database import init_db_pool, close_db_pool
 from src.modules.auth.router import router as auth_router
 from src.modules.patients.router import router as patients_router
 from src.modules.odontogram.router import router as odontogram_router
+from src.modules.ai_copilot.router import router as ai_copilot_router
 
 # Configuracao de logs estruturados
 logging.basicConfig(
@@ -127,3 +128,4 @@ def health_check() -> dict:
 app.include_router(auth_router, prefix=settings.API_V1_PREFIX)
 app.include_router(patients_router, prefix=settings.API_V1_PREFIX)
 app.include_router(odontogram_router, prefix=settings.API_V1_PREFIX)
+app.include_router(ai_copilot_router, prefix=settings.API_V1_PREFIX)
